@@ -1,12 +1,8 @@
-import React from 'react';
+import React from "react";
 
-class button extends React.Component {
+class button extends React.Component<any> {
   render() {
-    return (
-      <div>
-        button
-      </div>
-    );
+    return <div>button</div>;
   }
 }
 

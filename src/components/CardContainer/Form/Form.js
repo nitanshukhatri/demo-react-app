@@ -1,29 +1,36 @@
-import React from 'react';
-import Axios from 'axios';
+import React from "react";
+import Axios from "axios";
+import type { AxiosPromise } from "axios";
 
-class Form extends React.Component {
-  state ={username:''}
-  handleSubmit = (event) =>{
+type FormState = {
+  username: string
+};
+class Form extends React.Component<any, FormState> {
+  state = { username: "" };
+  handleSubmit = (event: any) => {
     event.preventDefault();
-    Axios.get(`https://api.github.com/users/${this.state.username}`).then((res)=>{
-      console.log(res);
-      this.props.onSubmit(res.data);
-      this.setState({username:''});
-    })
-  }
+    Axios.get(`https://api.github.com/users/${this.state.username}`).then(
+      res => {
+        console.log(res);
+        this.props.onSubmit(res.data);
+        this.setState({ username: "" });
+      }
+    );
+  };
 
   render() {
     return (
-       <form onSubmit={this.handleSubmit}>
-         <input type="text" placeholder="github username"
-         value={this.state.username}
-         onChange={(event)=> this.setState({username:event.target.value})}
-         />
-         <button type="submit">Add Card</button>
-       </form>
+      <form onSubmit={this.handleSubmit}>
+        <input
+          type="text"
+          placeholder="github username"
+          value={this.state.username}
+          onChange={event => this.setState({ username: event.target.value })}
+        />
+        <button type="submit">Add Card</button>
+      </form>
     );
   }
-
 }
 
 export default Form;
