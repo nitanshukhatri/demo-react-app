@@ -5,6 +5,10 @@ import Button from "../../components/Game/Button/Button";
 import Star from "../../components/Game/Star/Star";
 import Numbers from "../../components/Game/Numbers/Numbers";
 import { range } from "lodash";
+import { userActions } from "../../_actions/user.actions";
+import { connect } from "react-redux";
+import { Link } from 'react-router-dom';
+
 
 type GameState = {
   selectedNumbers: Array<any>,
@@ -14,7 +18,7 @@ type GameState = {
   redraws: number,
   doneStatus: string
 };
-var possibleCombinationSum = function(arr, n) {
+var possibleCombinationSum = function (arr, n) {
   if (arr.indexOf(n) >= 0) {
     return true;
   }
@@ -129,6 +133,10 @@ class GameBuilder extends React.Component<any, GameState> {
     this.setState(GameBuilder.initialState());
   };
 
+  logout() {
+    this.props.dispatch(userActions.logout());
+  }
+
   render() {
     const {
       selectedNumbers,
@@ -142,6 +150,8 @@ class GameBuilder extends React.Component<any, GameState> {
       <div className="container">
         <h3>Play Nine</h3>
         <br />
+        {/* <button onClick={this.logout()}>SignOut</button> */}
+        <Link to="/login">Logout</Link>
         <div className="row">
           <Star numberOfStars={randomNumberOfStars} />
           <Button
@@ -166,15 +176,22 @@ class GameBuilder extends React.Component<any, GameState> {
             </button>
           </div>
         ) : (
-          <Numbers
-            selectedNumbers={selectedNumbers}
-            selectNumber={this.selectNumber}
-            usedNumbers={usedNumbers}
-          />
-        )}
+            <Numbers
+              selectedNumbers={selectedNumbers}
+              selectNumber={this.selectNumber}
+              usedNumbers={usedNumbers}
+            />
+          )}
       </div>
     );
   }
 }
 
-export default GameBuilder;
+const mapStateToProps = state => {
+  return {
+    isAuthenticated: state.authentication.loggedIn
+  };
+};
+
+export default connect(mapStateToProps)(GameBuilder);
+

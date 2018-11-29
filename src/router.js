@@ -1,7 +1,7 @@
 import React, { Component } from "react";
 import { connect } from "react-redux";
 import {
-  BrowserRouter,
+  Router as BRouter,
   Route,
   Switch,
   Redirect,
@@ -11,19 +11,8 @@ import CardContainer from "./components/CardContainer/CardContainer";
 import GameBuilder from "./containers/GameBuilder/GameBuilder";
 import { LoginPage } from "./containers/Auth/Login/LoginPage";
 import { RegisterPage } from "./containers/Auth/RegisterPage/RegisterPage";
-
-const PrivateRoute = ({ component: Component, ...rest }) => (
-  <Route
-    {...rest}
-    render={props =>
-      fakeAuth.isAuthenticated === true ? (
-        <Component {...props} />
-      ) : (
-        <Redirect to="/login" />
-      )
-    }
-  />
-);
+import { PrivateRoute } from './PrivateRoute';
+import { history } from './_helpers/history';
 
 const fakeAuth = {
   isAuthenticated: false,
@@ -41,7 +30,7 @@ const fakeAuth = {
 class Router extends Component {
   render() {
     return (
-      <BrowserRouter>
+      <BRouter history={history}>
         <Switch>
           <PrivateRoute exact path="/card" component={CardContainer} />
           <PrivateRoute path="/game" component={GameBuilder} />
@@ -49,16 +38,17 @@ class Router extends Component {
           <Route path="/register" component={RegisterPage} />
           <PrivateRoute path="/" component={GameBuilder} />
         </Switch>
-      </BrowserRouter>
+      </BRouter>
     );
   }
 }
 
-const mapStateToProps = state => {
-  return {
-    user: state.user
-  };
-};
-export default connect(mapStateToProps)(Router);
+// const mapStateToProps = state => {
+//   return {
+//     isAuthenticated: state.authentication.loggedIn
+//   };
+// };
+// export default connect(mapStateToProps)(Router);
 
-// export default Router;
+
+export default Router;
