@@ -33,6 +33,10 @@ class Form extends Component {
         if (errors) return;
         this.doSubmit();
     }
+
+
+
+
     handleChange(e) {
         const { name, value } = e.target;
         const errors = { ...this.state.errors };
@@ -52,9 +56,9 @@ class Form extends Component {
         return <button className="btn btn-primary" >{label}</button>
     }
 
-    renderInput(name, label) {
-        const {data,errors} = { ...this.state }
-       return  <Input name={name} value={data[name]} label="Username" onChange={this.handleChange} error={errors[name]}></Input>
+    renderInput(name, label, type = 'text') {
+        const { data, errors } = { ...this.state }
+        return <Input type={type} name={name} value={data[name]} label={label} onChange={this.handleChange} error={errors[name]}></Input>
     }
 
 

@@ -8,6 +8,7 @@ import {
   withRouter
 } from "react-router-dom";
 import CardContainer from "./components/CardContainer/CardContainer";
+import Movies from "./components/Movies/Movies";
 import GameBuilder from "./containers/GameBuilder/GameBuilder";
 import { LoginPage } from "./containers/Auth/Login/LoginPage";
 import { RegisterPage } from "./containers/Auth/RegisterPage/RegisterPage";
@@ -36,7 +37,8 @@ class Router extends Component {
           <PrivateRoute path="/game" component={GameBuilder} />
           <Route path="/login" component={LoginPage} />
           <Route path="/register" component={RegisterPage} />
-          <PrivateRoute path="/" component={GameBuilder} />
+
+          <PrivateRoute path="/movies" component={Movies} />
         </Switch>
       </BRouter>
     );

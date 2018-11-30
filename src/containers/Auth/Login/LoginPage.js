@@ -41,13 +41,13 @@ class LoginPage extends Form {
 
   render() {
     const { loggingIn } = this.props;
-    const { data, submitted, errors } = this.state;
+
     return (
       <div className="col-md-6 col-md-offset-3">
         <h2>Login</h2>
         <form name="form" onSubmit={this.handleSubmit}>
           {this.renderInput('username', 'UserName')}
-          {this.renderInput('password', 'Password')}
+          {this.renderInput('password', 'Password', 'password')}
           <div className="form-group">
             {this.renderButton('Login')}
             {loggingIn && (
