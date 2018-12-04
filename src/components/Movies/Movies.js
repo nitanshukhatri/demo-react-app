@@ -5,15 +5,29 @@ import Pagination from "../../common/Pagination";
 import { paginate } from "../../utils/paginate";
 import { getGenres } from "../../_services/fakeGenre.service";
 import ListGroup from "../../common/listGroup";
+import _ from 'lodash';
+
+import TableHeader from '../../common/TableHeader';
+import TableBody from '../../common/TableBody';
 class Movies extends Component {
   constructor(props) {
     super(props);
+    this.columns = [
+      { path: 'title', label: 'Title' },
+      { path: 'genre.column', label: 'Genre' },
+      { path: 'numberInStock', label: 'NumberInStock' },
+      { path: 'dailyRentalRate', label: 'DailyRentalRate' },
+      { key: 'delete', content: movie => (<button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button>) },
+      {}
+
+    ];
     this.state = {
       genres: [],
       movies: [],
       pageSize: 4,
       currentPage: 1,
-      selectedGenre: {}
+      selectedGenre: null,
+      sortColumn: { path: '', order: '' }
     };
   }
 
@@ -29,24 +43,36 @@ class Movies extends Component {
 
   handleGenreSelect = genre => {
     console.log(genre);
-    this.setState({ selectedGenre: genre });
+    this.setState({ selectedGenre: genre, currentPage: 1 });
   };
+  handleSort = (path) => {
+    const sortColumn = { ...this.state.sortColumn };
+    if (sortColumn.path === path) {
+      sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : 'asc';
+    } else {
+      sortColumn.path = path;
+      sortColumn.order = 'asc';
+    }
+    this.setState({ sortColumn: sortColumn });
+  }
 
   componentDidMount() {
-    this.setState({ genres: getGenres(), movies: getMovies() });
+    const genres = [{ name: 'All Generes', _id: '' }, ...getGenres()]
+    this.setState({ genres: genres, movies: getMovies() });
   }
 
   render() {
     const { length: count } = this.state.movies;
-    const { pageSize, currentPage, movies, selectedGenre } = this.state;
+    const { pageSize, currentPage, movies, selectedGenre, sortColumn } = this.state;
     if (count === 0) return <p>There are no movies in database</p>;
 
-    const filtered = selectedGenre
+    const filtered = selectedGenre && selectedGenre._id
       ? movies.filter(m => m.genre._id === selectedGenre._id)
       : movies;
 
-    const localMovies = paginate(filtered, currentPage, pageSize);
-    console.log(filtered);
+    const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
+    const localMovies = paginate(sorted, currentPage, pageSize);
+
 
     return (
       <div className="row">
@@ -58,18 +84,20 @@ class Movies extends Component {
           />
         </div>
         <div className="col">
-          <p> Showing {count} movies </p>
+          <p> Showing {filtered.length} movies </p>
           <table className="table">
-            <thead>
+            <TableHeader columns={this.columns} sortColumn={this.state.sortColumn}></TableHeader>
+            <TableBody columns={this.columns} data={movies}></TableBody>
+            {/* <thead>
               <tr>
-                <th>Title</th>
-                <th>Genere</th>
-                <th>Stock</th>
-                <th>Rate</th>
+                <th onClick={() => this.handleSort('title')}>Title</th>
+                <th onClick={() => this.handleSort('genre.name')}>Genere</th>
+                <th onClick={() => this.handleSort('numberInStock')}>Stock</th>
+                <th onClick={() => this.handleSort('dailyRentalRate')}>Rate</th>
                 <th />
               </tr>
-            </thead>
-            <tbody>
+            </thead> */}
+            {/* <tbody>
               {localMovies.map(movie => (
                 <tr key={movie._id}>
                   <td>{movie.title}</td>
@@ -86,7 +114,7 @@ class Movies extends Component {
                   </td>
                 </tr>
               ))}
-            </tbody>
+            </tbody> */}
           </table>
           <Pagination
             itemsCount={filtered.length}
