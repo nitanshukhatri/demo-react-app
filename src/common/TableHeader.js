@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 
 class TableHeader extends Component {
     raiseSort = path => {
-        const { columns } = this.props;
+
         const sortColumn = { ...this.props.sortColumn };
         if (sortColumn.path === path) {
             sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : 'asc';
@@ -12,10 +12,20 @@ class TableHeader extends Component {
         }
         this.props.onSort(sortColumn);
     }
+
+    renderSortIcon = (column) => {
+        if (column.path !== this.props.sortColumn.path) return null;
+        if (this.props.sortColumn.order === 'asc') return <i className="fa fa-sort-asc"></i>
+        return <i className="fa fa-sort-desc" />;
+    }
+
     render() {
         return (<thead>
             <tr>
-                {this.props.columns.map(col => <th onClick={() => this.raiseSort(col.path)}>{col.label || col.key}</th>)}
+                {this.props.columns.map(col =>
+                    <th className="clickable" key={col.path || col.key} onClick={() => this.raiseSort(col.path)}>
+                        {col.label || col.key} {this.renderSortIcon(col)}
+                    </th>)}
             </tr>
         </thead>);
     }

@@ -3,7 +3,7 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { userActions } from "../../../_actions/user.actions";
 import Joi from 'joi-browser';
-import Input from '../../../components/Input/Input';
+
 import Form from '../../../common/Form';
 class LoginPage extends Form {
   schema = {

@@ -9,6 +9,7 @@ import {
 } from "react-router-dom";
 import CardContainer from "./components/CardContainer/CardContainer";
 import Movies from "./components/Movies/Movies";
+import MovieDetails from "./components/MovieDetails/MovieDetails";
 import GameBuilder from "./containers/GameBuilder/GameBuilder";
 import { LoginPage } from "./containers/Auth/Login/LoginPage";
 import { RegisterPage } from "./containers/Auth/RegisterPage/RegisterPage";
@@ -39,6 +40,7 @@ class Router extends Component {
           <Route path="/register" component={RegisterPage} />
 
           <PrivateRoute path="/movies" component={Movies} />
+          <PrivateRoute path="/movie/:id" component={MovieDetails}></PrivateRoute>
         </Switch>
       </BRouter>
     );

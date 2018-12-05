@@ -36,3 +36,6 @@ span {
   color: #99bb99;
   cursor: not-allowed;
 }
+.clickable {
+  cursor: pointer;
+}

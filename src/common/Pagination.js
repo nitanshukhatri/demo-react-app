@@ -3,7 +3,7 @@ import _ from "lodash";
 import PropTypes from "prop-types";
 
 const Pagination = props => {
-  const { itemsCount, pageSize, currentPage, onPageChange } = props;
+  const { itemsCount, pageSize, currentPage } = props;
   const pagesCount = Math.ceil(itemsCount / pageSize);
   console.log(itemsCount, pageSize);
   console.log(currentPage);
@@ -15,7 +15,7 @@ const Pagination = props => {
         {pages.map(page => (
           <li
             key={page}
-            className={currentPage == page ? "page-item active" : ""}
+            className={currentPage === page ? "page-item active" : ""}
           >
             <a
               href="javascript:"
