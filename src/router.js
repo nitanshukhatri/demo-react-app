@@ -7,9 +7,11 @@ import {
   Redirect,
   withRouter
 } from "react-router-dom";
+import NavBar from './common/NavBar';
 import CardContainer from "./components/CardContainer/CardContainer";
 import Movies from "./components/Movies/Movies";
 import MovieDetails from "./components/MovieDetails/MovieDetails";
+import NotFound from './components/NotFound/NotFound';
 import GameBuilder from "./containers/GameBuilder/GameBuilder";
 import { LoginPage } from "./containers/Auth/Login/LoginPage";
 import { RegisterPage } from "./containers/Auth/RegisterPage/RegisterPage";
@@ -32,17 +34,23 @@ const fakeAuth = {
 class Router extends Component {
   render() {
     return (
-      <BRouter history={history}>
-        <Switch>
-          <PrivateRoute exact path="/card" component={CardContainer} />
-          <PrivateRoute path="/game" component={GameBuilder} />
-          <Route path="/login" component={LoginPage} />
-          <Route path="/register" component={RegisterPage} />
+      <React.Fragment>
+        <NavBar></NavBar>
+        <BRouter history={history}>
+          <Switch>
+            <PrivateRoute exact path="/card" component={CardContainer} />
+            <PrivateRoute path="/game" component={GameBuilder} />
+            <Route path="/login" component={LoginPage} />
+            <Route path="/register" component={RegisterPage} />
+            <PrivateRoute path="/movies" component={Movies} />
+            <PrivateRoute path="/movie/:id?/:name?" component={MovieDetails}></PrivateRoute>
+            <Route path="/not-found" exact component={NotFound}></Route>
+            <PrivateRoute path="/" exact component={Movies}></PrivateRoute>
 
-          <PrivateRoute path="/movies" component={Movies} />
-          <PrivateRoute path="/movie/:id" component={MovieDetails}></PrivateRoute>
-        </Switch>
-      </BRouter>
+            <Redirect to="/not-found"></Redirect>
+          </Switch>
+        </BRouter>
+      </React.Fragment>
     );
   }
 }
