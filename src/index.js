@@ -10,6 +10,7 @@ import "font-awesome/css/font-awesome.min.css";
 import { Provider } from "react-redux";
 import { store } from "./_helpers/store";
 import { configureFakeBackend } from "./_helpers/fake-backend";
+import logger from "./_services/log.service";
 
 configureFakeBackend();
 

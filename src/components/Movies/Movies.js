@@ -5,29 +5,50 @@ import Pagination from "../../common/Pagination";
 import { paginate } from "../../utils/paginate";
 import { getGenres } from "../../_services/fakeGenre.service";
 import ListGroup from "../../common/listGroup";
-import _ from 'lodash';
+import _ from "lodash";
 
-import TableHeader from '../../common/TableHeader';
-import TableBody from '../../common/TableBody';
+import TableHeader from "../../common/TableHeader";
+import TableBody from "../../common/TableBody";
+import { Link } from "react-router-dom";
+import SearchBox from "../../common/SearchBox";
+
 class Movies extends Component {
   constructor(props) {
     super(props);
     this.columns = [
-      { path: 'title', label: 'Title' },
-      { path: 'genre.column', label: 'Genre' },
-      { path: 'numberInStock', label: 'NumberInStock' },
-      { path: 'dailyRentalRate', label: 'DailyRentalRate' },
-      { key: 'delete', content: movie => (<button onClick={() => this.handleDelete(movie)} className="btn btn-danger btn-sm">Delete</button>) },
+      {
+        path: "title",
+        label: "Title",
+        content: movie => (
+          <Link to={`/dashboard/movie-details/${movie._id}`}>
+            {movie.title}
+          </Link>
+        )
+      },
+      { path: "genre.column", label: "Genre" },
+      { path: "numberInStock", label: "NumberInStock" },
+      { path: "dailyRentalRate", label: "DailyRentalRate" },
+      {
+        key: "delete",
+        content: movie => (
+          <button
+            onClick={() => this.handleDelete(movie)}
+            className="btn btn-danger btn-sm"
+          >
+            Delete
+          </button>
+        )
+      },
       {}
-
     ];
     this.state = {
       genres: [],
       movies: [],
       pageSize: 4,
       currentPage: 1,
+      searchQuery: "",
       selectedGenre: null,
-      sortColumn: { path: '', order: '' }
+      sortColumn: { path: "", order: "" }
     };
   }
 
@@ -43,9 +64,14 @@ class Movies extends Component {
 
   handleGenreSelect = genre => {
     console.log(genre);
-    this.setState({ selectedGenre: genre, currentPage: 1 });
+    this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
   };
-  handleSort = (col) => {
+
+  handleSearch = query => {
+    this.setState({ selectedGenre: [], searchQuery: query, currentPage: 1 });
+  };
+
+  handleSort = col => {
     console.log(col);
     // const sortColumn = { ...this.state.sortColumn };
     // if (sortColumn.path === path) {
@@ -55,18 +81,30 @@ class Movies extends Component {
     //   sortColumn.order = 'asc';
     // }
     this.setState({ sortColumn: col });
-  }
+  };
 
   componentDidMount() {
-    const genres = [{ name: 'All Generes', _id: '' }, ...getGenres()]
+    const genres = [{ name: "All Generes", _id: "" }, ...getGenres()];
     this.setState({ genres: genres, movies: getMovies() });
   }
 
   getPagedData() {
-    const { pageSize, currentPage, movies, selectedGenre, sortColumn } = this.state;
-    const filtered = selectedGenre && selectedGenre._id
-      ? movies.filter(m => m.genre._id === selectedGenre._id)
-      : movies;
+    const {
+      pageSize,
+      currentPage,
+      movies,
+      selectedGenre,
+      searchQuery,
+      sortColumn
+    } = this.state;
+    let filtered = movies;
+    if (searchQuery) {
+      filtered = movies.filter(m =>
+        m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
+      );
+    } else if (selectedGenre && selectedGenre._id) {
+      filtered = movies.filter(m => m.genre._id === selectedGenre._id);
+    }
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
     const localMovies = paginate(sorted, currentPage, pageSize);
@@ -81,6 +119,7 @@ class Movies extends Component {
 
     return (
       <div className="row">
+        <SearchBox onChange={this.handleSearch} />
         <div className="col-2">
           <ListGroup
             items={this.state.genres}
@@ -91,8 +130,12 @@ class Movies extends Component {
         <div className="col">
           <p> Showing {totalCount} movies </p>
           <table className="table">
-            <TableHeader columns={this.columns} sortColumn={this.state.sortColumn} onSort={this.handleSort}></TableHeader>
-            <TableBody columns={this.columns} data={data}></TableBody>
+            <TableHeader
+              columns={this.columns}
+              sortColumn={this.state.sortColumn}
+              onSort={this.handleSort}
+            />
+            <TableBody columns={this.columns} data={data} />
           </table>
           <Pagination
             itemsCount={totalCount}

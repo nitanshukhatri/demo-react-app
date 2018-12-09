@@ -1,20 +1,29 @@
-import React from 'react';
-import SideBar from '../../common/Sidebar';
-import GameBuilder from "../../containers";
-import { Route } from 'react-router-dom';
+import React from "react";
+import SideBar from "../../common/Sidebar";
+import NavBar from "../../common/NavBar";
+import GameBuilder from "../../containers/GameBuilder/GameBuilder";
+import { Route } from "react-router-dom";
 import Movies from "../Movies/Movies";
+import MovieDetails from "../MovieDetails/MovieDetails";
+import { PrivateRoute } from "../../PrivateRoute";
 
-class dashboard extends React.Component {
+class Dashboard extends React.Component {
   render() {
     return (
       <div>
         dashboard
-        <SideBar></SideBar>
-        <Route path="/dashboard/game" component={GameBuilder}></Route>
-        <Route path="/dashboard/movies" component={Movies}></Route>
+        <NavBar />
+        <SideBar />
+        <Route path="/dashboard/game" component={GameBuilder} />
+        <Route path="/dashboard/movies" component={Movies} />
+        <PrivateRoute
+          path="/dashboard/movie-details/:id?/:name?"
+          component={MovieDetails}
+        />{" "}
+        */}
       </div>
     );
   }
 }
 
-export default dashboard;
+export default Dashboard;
