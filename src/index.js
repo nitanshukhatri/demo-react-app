@@ -12,6 +12,8 @@ import { store } from "./_helpers/store";
 import { configureFakeBackend } from "./_helpers/fake-backend";
 import logger from "./_services/log.service";
 
+logger.init();
+
 configureFakeBackend();
 
 ReactDOM.render(
