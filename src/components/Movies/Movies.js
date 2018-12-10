@@ -119,6 +119,7 @@ class Movies extends Component {
 
     return (
       <div className="row">
+        <Link to="/dashboard/movies/create-movie">CreateMovies</Link>
         <SearchBox onChange={this.handleSearch} />
         <div className="col-2">
           <ListGroup

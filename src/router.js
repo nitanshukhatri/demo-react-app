@@ -21,6 +21,7 @@ import { history } from "./_helpers/history";
 import http from "./_services/http.service";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
+import { database } from "./firebase";
 
 const fakeAuth = {
   isAuthenticated: false,
@@ -36,6 +37,15 @@ const fakeAuth = {
 };
 
 class Router extends Component {
+  constructor(props) {
+    super(props);
+  }
+
+  componentDidMount() {
+    database.ref().on("value", () => {
+      console.log("The Data Changed !");
+    });
+  }
   render() {
     return (
       <React.Fragment>

@@ -5,6 +5,7 @@ import GameBuilder from "../../containers/GameBuilder/GameBuilder";
 import { Route } from "react-router-dom";
 import Movies from "../Movies/Movies";
 import MovieDetails from "../MovieDetails/MovieDetails";
+import CreateMovie from "../CreateMovie/CreateMovie";
 import { PrivateRoute } from "../../PrivateRoute";
 
 class Dashboard extends React.Component {
@@ -15,12 +16,12 @@ class Dashboard extends React.Component {
         <NavBar />
         <SideBar />
         <Route path="/dashboard/game" component={GameBuilder} />
-        <Route path="/dashboard/movies" component={Movies} />
+        <Route path="/dashboard/movies" exact component={Movies} />
+        <Route path="/dashboard/movies/create-movie" component={CreateMovie} />
         <PrivateRoute
           path="/dashboard/movie-details/:id?/:name?"
           component={MovieDetails}
-        />{" "}
-        */}
+        />
       </div>
     );
   }
