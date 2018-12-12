@@ -26,7 +26,7 @@ class Form extends Component {
 
     }
 
-    handleSubmit(e) {
+    handleSubmit = (e) => {
         e.preventDefault();
         const errors = this.validate();
         this.setState({ errors: errors || {} });
@@ -37,7 +37,7 @@ class Form extends Component {
 
 
 
-    handleChange(e) {
+    handleChange = (e) => {
         const { name, value } = e.target;
         const errors = { ...this.state.errors };
 

@@ -1,7 +1,7 @@
 import React from "react";
 
 const Card = (props: any) => {
-  console.log(props);
+  // console.log(props);
   return (
     <div style={{ margin: "1em" }}>
       <img width="75" src={props.avatar_url} alt="" />

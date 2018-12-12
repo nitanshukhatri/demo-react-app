@@ -12,6 +12,4 @@ export const moviesConstants = {
     DELETE_MOVIES_SUCCESS: 'DELETE_MOVIES_SUCCESS',
     DELETE_MOVIES_FAILURE: 'DELETE_MOVIES_FAILURE',
 
-
-
 }

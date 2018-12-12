@@ -1,6 +1,8 @@
 import firebase from "firebase";
+import 'firebase/auth';
+import 'firebase/firestore'
 
-const config = {
+export const config = {
   apiKey: "AIzaSyAOioIVsHCyy-3p6sG_4GLBlYfKs5VLDfg",
   authDomain: "react-demo-213011.firebaseapp.com",
   databaseURL: "https://react-demo-213011.firebaseio.com",
@@ -10,5 +12,8 @@ const config = {
 };
 
 firebase.initializeApp(config);
+firebase.firestore().settings({ timestampsInSnapshots: true });
+
+export default firebase;
 
 export const database = firebase.database();

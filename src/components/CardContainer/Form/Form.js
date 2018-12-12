@@ -11,7 +11,6 @@ class Form extends React.Component<any, FormState> {
     event.preventDefault();
     Axios.get(`https://api.github.com/users/${this.state.username}`).then(
       res => {
-        console.log(res);
         this.props.onSubmit(res.data);
         this.setState({ username: "" });
       }

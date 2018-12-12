@@ -42,9 +42,9 @@ class Router extends Component {
   }
 
   componentDidMount() {
-    database.ref().on("value", () => {
-      console.log("The Data Changed !");
-    });
+    // database.ref().on("value", (snapshot) => {
+    //   console.log("The Data Changed !", snapshot.val());
+    // });
   }
   render() {
     return (

@@ -12,7 +12,11 @@ import TableBody from "../../common/TableBody";
 import { Link } from "react-router-dom";
 import SearchBox from "../../common/SearchBox";
 
+import { firestoreConnect } from 'react-redux-firebase';
+import { compose } from 'redux';
+
 class Movies extends Component {
+
   constructor(props) {
     super(props);
     this.columns = [
@@ -20,7 +24,7 @@ class Movies extends Component {
         path: "title",
         label: "Title",
         content: movie => (
-          <Link to={`/dashboard/movie-details/${movie._id}`}>
+          <Link to={`/dashboard/movie-details/${movie.id}`}>
             {movie.title}
           </Link>
         )
@@ -53,7 +57,7 @@ class Movies extends Component {
   }
 
   handleDelete = movie => {
-    const movies = this.state.movies.filter(m => m._id !== movie._id);
+    const movies = this.state.movies.filter(m => m.id !== movie.id);
     this.setState({ movies: movies });
   };
 
@@ -63,7 +67,6 @@ class Movies extends Component {
   };
 
   handleGenreSelect = genre => {
-    console.log(genre);
     this.setState({ selectedGenre: genre, searchQuery: "", currentPage: 1 });
   };
 
@@ -72,20 +75,22 @@ class Movies extends Component {
   };
 
   handleSort = col => {
-    console.log(col);
-    // const sortColumn = { ...this.state.sortColumn };
-    // if (sortColumn.path === path) {
-    //   sortColumn.order = (sortColumn.order === 'asc') ? 'desc' : 'asc';
-    // } else {
-    //   sortColumn.path = path;
-    //   sortColumn.order = 'asc';
-    // }
     this.setState({ sortColumn: col });
   };
 
   componentDidMount() {
+    console.log(this.props);
     const genres = [{ name: "All Generes", _id: "" }, ...getGenres()];
     this.setState({ genres: genres, movies: getMovies() });
+  }
+
+  componentWillReceiveProps(nextProps) {
+    console.log(nextProps);
+    if (nextProps.movies) {
+      this.setState({
+        movies: nextProps.movies
+      })
+    }
   }
 
   getPagedData() {
@@ -97,14 +102,18 @@ class Movies extends Component {
       searchQuery,
       sortColumn
     } = this.state;
+
     let filtered = movies;
+
     if (searchQuery) {
       filtered = movies.filter(m =>
         m.title.toLowerCase().startsWith(searchQuery.toLowerCase())
       );
     } else if (selectedGenre && selectedGenre._id) {
-      filtered = movies.filter(m => m.genre._id === selectedGenre._id);
+      // filtered = movies.filter(m => m.genre._id === selectedGenre._id);
+      //filtered = this.props.movies;
     }
+
 
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
     const localMovies = paginate(sorted, currentPage, pageSize);
@@ -112,6 +121,7 @@ class Movies extends Component {
   }
 
   render() {
+
     const { length: count } = this.state.movies;
 
     if (count === 0) return <p>There are no movies in database</p>;
@@ -150,9 +160,16 @@ class Movies extends Component {
   }
 }
 
-// function mapStateToProps(state) {
-//   return {};
-// }
+function mapStateToProps(state) {
+  return {
+    movies: state.firestore.ordered.movies
+  };
+}
 
-//export default connect(mapStateToProps)(Movies);
-export default Movies;
+export default compose(
+  connect(mapStateToProps),
+  firestoreConnect([
+    { collection: 'movies' }
+  ])
+)(Movies);
+//export default Movies;
