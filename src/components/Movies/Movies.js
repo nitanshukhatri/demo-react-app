@@ -14,6 +14,7 @@ import SearchBox from "../../common/SearchBox";
 
 import { firestoreConnect } from 'react-redux-firebase';
 import { compose } from 'redux';
+import moment from 'moment';
 
 class Movies extends Component {
 
@@ -29,9 +30,18 @@ class Movies extends Component {
           </Link>
         )
       },
-      { path: "genre.column", label: "Genre" },
-      { path: "numberInStock", label: "NumberInStock" },
-      { path: "dailyRentalRate", label: "DailyRentalRate" },
+      { path: "genre", label: "Genre" },
+      { path: "stock", label: "NumberInStock" },
+
+      { path: "rate", label: "DailyRentalRate" },
+      // {
+      //   key: "createdAt",
+      //   content: movie => (
+      //     <p>
+      //       {moment(new Date())}
+      //     </p>
+      //   ), label: "createdAt"
+      // },
       {
         key: "delete",
         content: movie => (
@@ -43,6 +53,7 @@ class Movies extends Component {
           </button>
         )
       },
+
       {}
     ];
     this.state = {
@@ -75,13 +86,14 @@ class Movies extends Component {
   };
 
   handleSort = col => {
+    console.log(col);
     this.setState({ sortColumn: col });
   };
 
   componentDidMount() {
     console.log(this.props);
     const genres = [{ name: "All Generes", _id: "" }, ...getGenres()];
-    this.setState({ genres: genres, movies: getMovies() });
+    this.setState({ genres: genres });
   }
 
   componentWillReceiveProps(nextProps) {
@@ -164,6 +176,9 @@ function mapStateToProps(state) {
   return {
     movies: state.firestore.ordered.movies
   };
+}
+const mapDispacthToProps = (dispatch) => {
+
 }
 
 export default compose(

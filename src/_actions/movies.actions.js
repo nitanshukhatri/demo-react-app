@@ -9,8 +9,13 @@ export function create(movie) {
     // make call to database
     return (dispatch, getState, { getFirebase, getFirestore }) => {
         const firestore = getFirestore();
+        const profile = getState().firebase.profile;
+        const authorId = getState().firebase.auth.uid;
         firestore.collection("movies").add({
             ...movie,
+            // authorFirstName: profile.firstname,
+            // authorLastName: profile.lastname,
+            // authorId: authorId,
             createAt: new Date()
         }).then(() => {
             dispatch({ type: moviesConstants.CREATE_MOVIES, payload: movie })

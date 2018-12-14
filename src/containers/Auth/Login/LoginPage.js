@@ -3,26 +3,28 @@ import { Link } from "react-router-dom";
 import { connect } from "react-redux";
 import { userActions } from "../../../_actions/user.actions";
 import Joi from 'joi-browser';
-
 import Form from '../../../common/Form';
+import { Redirect } from 'react-router-dom';
+
 class LoginPage extends Form {
   schema = {
-    username: Joi.string().required().label('Username'),
+    email: Joi.string().required().label('Email'),
     password: Joi.string().required().label('Password')
   };
   constructor(props) {
     super(props);
 
     // reset login status
-    this.props.dispatch(userActions.logout());
+    //this.props.dispatch(userActions.logout());
+    //this.props.logout();
 
     this.state = {
       data: {
-        username: "",
+        email: "",
         password: "",
       },
       submitted: false,
-      errors: {}
+      errors: {},
     };
 
     this.handleChange = this.handleChange.bind(this);
@@ -31,22 +33,23 @@ class LoginPage extends Form {
 
 
   doSubmit = () => {
-    this.setState({ submitted: true });
-    const { data } = this.state;
-    const { dispatch } = this.props;
-    if (data.username && data.password) {
-      dispatch(userActions.login(data.username, data.password));
-    }
+    //   this.setState({ submitted: true });
+    this.props.signIn(this.state.data);
+    // const { data } = this.state;
+    // const { dispatch } = this.props;
+    // if (data.username && data.password) {
+    //   dispatch(userActions.login(data.username, data.password));
+    // }
   }
 
   render() {
-    const { loggingIn } = this.props;
-
+    const { loggingIn, authError, auth } = this.props;
+    // if (auth.uid) return <Redirect to="/"></Redirect>
     return (
       <div className="col-md-6 col-md-offset-3">
         <h2>Login</h2>
         <form name="form" onSubmit={this.handleSubmit}>
-          {this.renderInput('username', 'UserName')}
+          {this.renderInput('email', 'Email')}
           {this.renderInput('password', 'Password', 'password')}
           <div className="form-group">
             {this.renderButton('Login')}
@@ -56,7 +59,11 @@ class LoginPage extends Form {
             <Link to="/register" className="btn btn-link">
               Register
             </Link>
+            <div className="red-text center">
+              {authError ? <p>{authError}</p> : null}
+            </div>
           </div>
+
         </form>
       </div>
     );
@@ -66,9 +73,20 @@ class LoginPage extends Form {
 function mapStateToProps(state) {
   const { loggingIn } = state.authentication;
   return {
-    loggingIn
+    loggingIn,
+    authError: state.authentication.authError,
+    auth: state.firebase.auth
+
   };
 }
 
-const connectedLoginPage = connect(mapStateToProps)(LoginPage);
+function mapDispatchToProps(dispatch) {
+  return {
+    signIn: (creds) => dispatch(userActions.signIn(creds)),
+    logout: () => dispatch(userActions.logout())
+  }
+}
+
+// export default connect(null, mapDispatchToProps)(LoginPage);
+const connectedLoginPage = connect(mapStateToProps, mapDispatchToProps)(LoginPage);
 export { connectedLoginPage as LoginPage };

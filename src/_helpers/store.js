@@ -17,7 +17,6 @@ export const store = createStore(
   composeEnhancers(
     applyMiddleware(thunk.withExtraArgument({ getFirebase, getFirestore }), loggerMiddleware),
     reduxFirestore(config),
-    reactReduxFirebase(config)
-
+    reactReduxFirebase(config, { useFirestoreForProfile: true, userProfile: 'users', enableLogging: false, attachAuthIsReady: true })
   )
 );

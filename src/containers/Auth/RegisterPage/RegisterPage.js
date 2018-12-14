@@ -4,9 +4,11 @@ import { connect } from 'react-redux';
 import { userActions } from '../../../_actions/user.actions';
 import Form from '../../../common/Form';
 import Joi from 'joi-browser';
+import { Redirect } from 'react-router-dom';
+
 class RegisterPage extends Form {
   schema = {
-    username: Joi.string().email().required().label('Username'),
+    email: Joi.string().email().required().label('Username'),
     password: Joi.string().required().min(5).label('Password'),
     firstname: Joi.string().required().label('Firstname'),
     lastname: Joi.string().required().label('Lastname')
@@ -18,7 +20,7 @@ class RegisterPage extends Form {
       data: {
         firstname: '',
         lastname: '',
-        username: '',
+        email: '',
         password: ''
       },
       submitted: false,
@@ -33,20 +35,23 @@ class RegisterPage extends Form {
   doSubmit = () => {
     this.setState({ submitted: true });
     const { data } = { ...this.state };
-    const { dispatch } = this.props;
-    dispatch(userActions.register(data));
+    this.props.signUp(data);
+    // const { dispatch } = this.props;
+    // dispatch(userActions.signUp(data));
 
   }
 
   render() {
-    const { registering } = this.props;
+    const { registering, auth } = this.props;
+    if (auth.uid) return <Redirect to="/"></Redirect>
+
     return (
       <div className="col-md-6 col-md-offset-3">
         <h2>Register</h2>
         <form name="form" onSubmit={this.handleSubmit}>
           {this.renderInput('firstname', 'FirstName')}
           {this.renderInput('lastname', 'LastName')}
-          {this.renderInput('username', 'UserName')}
+          {this.renderInput('email', 'Email')}
           {this.renderInput('password', 'Password', 'password')}
           <div className="form-group">
             {this.renderButton('Register')}
@@ -64,10 +69,17 @@ class RegisterPage extends Form {
 function mapStateToProps(state) {
   const { registering } = state.registration;
   return {
-    registering
+    registering,
+    auth: state.firebase.auth
   };
 }
 
-const connectedRegisterPage = connect(mapStateToProps)(RegisterPage);
+const mapDispatchToProps = (dispatch) => {
+  return {
+    signUp: (newUser) => dispatch(userActions.signUp(newUser))
+  }
+}
+
+const connectedRegisterPage = connect(mapStateToProps, mapDispatchToProps)(RegisterPage);
 
 export { connectedRegisterPage as RegisterPage };

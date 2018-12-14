@@ -8,8 +8,64 @@ export const userActions = {
   logout,
   register,
   getAll,
-  delete: _delete
+  delete: _delete,
+  signIn,
+  signOut,
+  signUp
 };
+
+function signIn(credentials) {
+  return (dispatch, getState, { getFirebase }) => {
+    const firebase = getFirebase();
+    firebase.auth().signInWithEmailAndPassword(
+      credentials.email,
+      credentials.password
+    ).then((res) => {
+      console.log(res);
+      dispatch({ type: userConstants.LOGIN_SUCCESS, res });
+      if (res) {
+        // store user details and jwt token in local storage to keep user logged in between page refreshes
+        localStorage.setItem("user", JSON.stringify(res.user));
+      }
+      history.push("/");
+    }).catch((err) => {
+      dispatch({ type: userConstants.LOGIN_FAILURE, err });
+    })
+  }
+
+}
+
+function signOut() {
+  return (dispatch, getState, { getFirebase }) => {
+    const firebase = getFirebase();
+    firebase.auth().signOut().then(() => {
+      dispatch({ type: userConstants.LOGOUT });
+      localStorage.removeItem("user");
+      history.push("/login");
+    });
+  }
+}
+
+function signUp(newUser) {
+  return (dispatch, getState, { getFirebase, getFirestore }) => {
+    const firebase = getFirebase();
+    const firestore = getFirestore();
+    firebase.auth().createUserWithEmailAndPassword(newUser.email, newUser.password).then((res) => {
+
+      return firestore.collection('users').doc(res.user.uid).set({
+        firstName: newUser.firstname,
+        lastName: newUser.lastname,
+        initials: newUser.firstname[0] + newUser.lastname[0]
+      })
+    }).then(() => {
+      dispatch({ type: userConstants.REGISTER_SUCCESS });
+      history.push("/");
+    }).catch(err => {
+      dispatch({ type: userConstants.REGISTER_FAILURE, err });
+    })
+
+  }
+}
 
 function login(username, password) {
   return dispatch => {
@@ -18,7 +74,7 @@ function login(username, password) {
     userService.login(username, password).then(
       user => {
         dispatch(success(user));
-        history.push("/movies");
+        history.push("/");
       },
       error => {
         dispatch(failure(error.toString()));

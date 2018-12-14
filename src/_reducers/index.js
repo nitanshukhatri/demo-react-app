@@ -6,6 +6,7 @@ import { users } from "./users.reducer";
 import { alert } from "./alert.reducer";
 import movies from "./movies.reducer";
 import { firestoreReducer } from 'redux-firestore';
+import { firebaseReducer } from 'react-redux-firebase';
 
 const rootReducer = combineReducers({
   authentication,
@@ -13,7 +14,8 @@ const rootReducer = combineReducers({
   users,
   alert,
   movies,
-  firestore: firestoreReducer
+  firestore: firestoreReducer,
+  firebase: firebaseReducer
 });
 
 export default rootReducer;

@@ -28,6 +28,9 @@ class CreateMovie extends Form {
     const { data } = this.state;
     const { dispatch } = this.props;
     this.props.createMovie(data);
+    this.props.history.push('/dashboard/movies');
+
+
     // if (data.username && data.password) {
     //   dispatch(userActions.login(data.username, data.password));
     // }
