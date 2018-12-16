@@ -12,12 +12,13 @@ import TableBody from "../../common/TableBody";
 import { Link } from "react-router-dom";
 import SearchBox from "../../common/SearchBox";
 
-import { firestoreConnect } from 'react-redux-firebase';
-import { compose } from 'redux';
-import moment from 'moment';
+import { firestoreConnect } from "react-redux-firebase";
+import { compose } from "redux";
+import moment from "moment";
+
+import withLoader from "../../hoc/WithLoader";
 
 class Movies extends Component {
-
   constructor(props) {
     super(props);
     this.columns = [
@@ -25,9 +26,7 @@ class Movies extends Component {
         path: "title",
         label: "Title",
         content: movie => (
-          <Link to={`/dashboard/movie-details/${movie.id}`}>
-            {movie.title}
-          </Link>
+          <Link to={`/dashboard/movie-details/${movie.id}`}>{movie.title}</Link>
         )
       },
       { path: "genre", label: "Genre" },
@@ -86,22 +85,19 @@ class Movies extends Component {
   };
 
   handleSort = col => {
-    console.log(col);
     this.setState({ sortColumn: col });
   };
 
   componentDidMount() {
-    console.log(this.props);
     const genres = [{ name: "All Generes", _id: "" }, ...getGenres()];
     this.setState({ genres: genres });
   }
 
   componentWillReceiveProps(nextProps) {
-    console.log(nextProps);
     if (nextProps.movies) {
       this.setState({
         movies: nextProps.movies
-      })
+      });
     }
   }
 
@@ -126,14 +122,12 @@ class Movies extends Component {
       //filtered = this.props.movies;
     }
 
-
     const sorted = _.orderBy(filtered, [sortColumn.path], [sortColumn.order]);
     const localMovies = paginate(sorted, currentPage, pageSize);
     return { totalCount: filtered.length, data: localMovies };
   }
 
   render() {
-
     const { length: count } = this.state.movies;
 
     if (count === 0) return <p>There are no movies in database</p>;
@@ -177,14 +171,10 @@ function mapStateToProps(state) {
     movies: state.firestore.ordered.movies
   };
 }
-const mapDispacthToProps = (dispatch) => {
-
-}
+const mapDispacthToProps = dispatch => {};
 
 export default compose(
   connect(mapStateToProps),
-  firestoreConnect([
-    { collection: 'movies' }
-  ])
+  firestoreConnect([{ collection: "movies" }])
 )(Movies);
 //export default Movies;

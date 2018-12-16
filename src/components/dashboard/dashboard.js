@@ -7,17 +7,18 @@ import Movies from "../Movies/Movies";
 import MovieDetails from "../MovieDetails/MovieDetails";
 import CreateMovie from "../CreateMovie/CreateMovie";
 import { PrivateRoute } from "../../PrivateRoute";
-import { connect } from 'react-redux';
-import { compose } from 'redux';
-import { Redirect } from 'react-router-dom';
+import { connect } from "react-redux";
+import { compose } from "redux";
+import { Redirect } from "react-router-dom";
+import { Spinner } from "react-redux-spinner";
 
 class Dashboard extends React.Component {
   render() {
     const { auth } = this.props;
-    if (!auth.uid) return <Redirect to="/login"></Redirect>
+    if (!auth.uid) return <Redirect to="/login" />;
     return (
       <div>
-        dashboard
+        <Spinner />
         <NavBar />
         <SideBar />
         <PrivateRoute path="/dashboard/game" component={GameBuilder} />
@@ -32,11 +33,10 @@ class Dashboard extends React.Component {
   }
 }
 
-const mapStateToProps = (state) => {
+const mapStateToProps = state => {
   return {
     auth: state.firebase.auth
-  }
-
-}
+  };
+};
 
 export default compose(connect(mapStateToProps))(Dashboard);

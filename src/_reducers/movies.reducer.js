@@ -1,17 +1,16 @@
 import { moviesConstants } from "../_constants/movies.constants";
 
-export default function (state = [], action) {
-    switch (action.type) {
-        case moviesConstants.CREATE_MOVIES:
-            return [...state, action.payload];
+export default function(state = [], action) {
+  switch (action.type) {
+    case moviesConstants.CREATE_MOVIES:
+      return state;
+    case moviesConstants.CREATE_MOVIES_SUCCESS:
+      return [...state, action.payload];
 
-        case moviesConstants.CREATE_MOVIES_FAILURE:
+    case moviesConstants.CREATE_MOVIES_FAILURE:
+      return state;
 
-            return state;
-
-        default:
-            return state;
-    }
+    default:
+      return state;
+  }
 }
-
-

@@ -1,7 +1,7 @@
 import React from "react";
 import Axios from "axios";
 import type { AxiosPromise } from "axios";
-
+import withErrorHandler from "../../../hoc/WithErrorHandler";
 type FormState = {
   username: string
 };
@@ -10,9 +10,11 @@ class Form extends React.Component<any, FormState> {
   handleSubmit = (event: any) => {
     event.preventDefault();
     Axios.get(`https://api.github.com/users/${this.state.username}`).then(
-      res => {
-        this.props.onSubmit(res.data);
-        this.setState({ username: "" });
+      response => {
+        if (response.hasOwnProperty("data")) {
+          this.props.onSubmit(response.data);
+          this.setState({ username: "" });
+        }
       }
     );
   };
@@ -32,4 +34,4 @@ class Form extends React.Component<any, FormState> {
   }
 }
 
-export default Form;
+export default withErrorHandler(Form, Axios);
