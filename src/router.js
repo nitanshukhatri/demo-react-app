@@ -22,6 +22,7 @@ import http from "./_services/http.service";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import { database } from "./firebase";
+import UiModal from "./components/UI/UiModal/UiModal";
 
 const fakeAuth = {
   isAuthenticated: false,
@@ -50,6 +51,7 @@ class Router extends Component {
     return (
       <React.Fragment>
         <ToastContainer />
+        <UiModal></UiModal>
         <BRouter history={history}>
           <Switch>
             <PrivateRoute path="/dashboard" component={Dashboard} />

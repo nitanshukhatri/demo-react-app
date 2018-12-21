@@ -18,6 +18,8 @@ import moment from "moment";
 
 import withLoader from "../../hoc/WithLoader";
 
+import UiModal from "../UI/UiModal/UiModal";
+
 class Movies extends Component {
   constructor(props) {
     super(props);
@@ -33,14 +35,17 @@ class Movies extends Component {
       { path: "stock", label: "NumberInStock" },
 
       { path: "rate", label: "DailyRentalRate" },
-      // {
-      //   key: "createdAt",
-      //   content: movie => (
-      //     <p>
-      //       {moment(new Date())}
-      //     </p>
-      //   ), label: "createdAt"
-      // },
+      {
+        key: "edit",
+        content: movie => (
+          <button
+            onClick={() => this.handleEdit(movie)}
+            className="btn btn-danger btn-sm"
+          >
+            <i className="fa fa-edit"></i>
+          </button>
+        )
+      },
       {
         key: "delete",
         content: movie => (
@@ -87,6 +92,10 @@ class Movies extends Component {
   handleSort = col => {
     this.setState({ sortColumn: col });
   };
+
+  handleEdit = movie => {
+    console.log(movie);
+  }
 
   componentDidMount() {
     const genres = [{ name: "All Generes", _id: "" }, ...getGenres()];
@@ -171,7 +180,7 @@ function mapStateToProps(state) {
     movies: state.firestore.ordered.movies
   };
 }
-const mapDispacthToProps = dispatch => {};
+const mapDispacthToProps = dispatch => { };
 
 export default compose(
   connect(mapStateToProps),
