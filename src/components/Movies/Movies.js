@@ -95,6 +95,7 @@ class Movies extends Component {
 
   handleEdit = movie => {
     console.log(movie);
+    this.refs._modal.handleClickOpen();
   }
 
   componentDidMount() {
@@ -146,6 +147,12 @@ class Movies extends Component {
       <div className="row">
         <Link to="/dashboard/movies/create-movie">CreateMovies</Link>
         <SearchBox onChange={this.handleSearch} />
+        <UiModal ref="_modal">
+          <h1>A Custom Modal!</h1>
+          <p>
+            Home page text:
+                    </p>
+        </UiModal>
         <div className="col-2">
           <ListGroup
             items={this.state.genres}
