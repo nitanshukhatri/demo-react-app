@@ -10,8 +10,6 @@ import DialogContentText from '@material-ui/core/DialogContentText';
 import DialogTitle from '@material-ui/core/DialogTitle';
 import Portal from '../Portal';
 
-
-
 const ModalWrapper = styled.div`
   position: absolute;
   top: 0;
@@ -66,40 +64,31 @@ class UiModal extends React.Component {
 
   handleClickOpen = () => {
     this.setState({ open: true });
-    // this.setState({ open: true });
   };
 
-  static handleClose = () => {
+  handleClose = () => {
     this.setState({ open: false });
   };
 
   componentDidMount() {
-    // add this modal instance to the modal service so it's accessible from other components
-    // UiModal.modal.push(this);
   }
 
-  // render() {
-  //   return ReactDOM.createPortal(
-  //     this.props.children,
-  //     this.el,
-  //   );
-  // }
 
   render() {
     const { children } = this.props;
     return (
       <Portal>
-        {this.state.on && (
+        {this.state.open &&
           <ModalWrapper>
             <ModalCard>
               <CloseButton onClick={this.handleClose}>
-                <i class="fa fa-times" aria-hidden="true"></i>
+                <i className="fa fa-times" aria-hidden="true"></i>
               </CloseButton>
               <div>{children}</div>
             </ModalCard>
             <Background onClick={this.handleClose} />
           </ModalWrapper>
-        )}
+        }
       </Portal>
     );
 

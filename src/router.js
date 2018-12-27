@@ -51,7 +51,7 @@ class Router extends Component {
     return (
       <React.Fragment>
         <ToastContainer />
-        <UiModal></UiModal>
+
         <BRouter history={history}>
           <Switch>
             <PrivateRoute path="/dashboard" component={Dashboard} />
